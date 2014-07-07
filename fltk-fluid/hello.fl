@@ -1,0 +1,14 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0302 
+header_name {.h} 
+code_name {.cxx}
+widget_class MainWindow {
+  label Application open
+  xywh {100 338 750 500} type Double hide resizable
+  class Fl_Window
+} {
+  Fl_Output {} {
+    label {output:} selected
+    image {../image.png} xywh {125 45 400 400} align 10
+  }
+} 
