@@ -1,0 +1,38 @@
+---
+layout: post
+title:  "Codeforces #247"
+date:   2014-05-21 17:00:00
+tags: diary
+---
+
+Hoje fiz [esse](http://codeforces.com/contest/431) contest; é bom
+fazer alguns de vez em quando para não perder o ritmo. Ele tinha 5
+problemas.
+
+* O primeiro era bastante simples; só escrever código.
+* O segundo era
+interessante: tinha que gerar todas as permutações (não
+necessariamente na ordem crescente) de um vetor com 5 números (ou uma
+string com 5 caracteres, como quiser). Senti-me bastante confortável
+utilizando a `next_permutation` da STL. Ah, não foi sempre
+assim. Antigamente eu tentava utilizar o mínimo possível a STL, apenas
+usava as estruturas de dados dela. Hoje em dia eu acho que os
+algoritmos de lá são bastante úteis, e também mais confiáveis do que
+se realizássemos alguma implementação manual. É claro que às vezes
+temos que fazer às coisas manualmente, mas definitivamente esse não
+era o foco desse segundo problema. Apesar de que, repito, não
+precisava gerar todas as permutações na ordem. Então um simples
+_backtracking_ também resolveria o problema. Depois de gerar as
+permutações, era só realizar uns cálculos simples. Confesso que perdi
+mais de meia hora nesse problema: erro bobo. Fui indexar o vetor de 1
+a 5, quando era para fazer isso de 0 a 4.
+* O terceiro me fez sair um pouco da minha zona de conforto. Era uma
+  PD. Não achei difícil, mas errei o problema. Depois do contest fui
+  investigar a causa disso: tinha aplicado % (mod) no lugar errado. Ou
+  seja, a minha solução estava correta, mas a minha redução para o
+  resíduo certo não.
+* Os dois últimos problemas não cheguei a investigar muito, graças aos
+  dois erros (**bobos**) anteriores, mas que me custaram bastante
+  tempo.
+
+Estou gostando cada vez mais do design do **codeforces**.

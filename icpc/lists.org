@@ -1,0 +1,1301 @@
+-*- eval: (git-auto-commit-mode 1) eval: (setq-default gac-automatically-push-p t) -*-
+
+#+TITLE: icpc-journal
+#+STARTUP: overview
+#+STARTUP: hideblocks
+##+STARTUP: indent
+#+DRAWERS: NEXT
+
+* PERFECT 2-sum problem
+Dado um vetor v de números inteiros, qual é a quantidade de pares não-ordenados (a,b), com a,b ∈ v que satisfazem a + b = 0?
+- A princípio, contar todas as possibilidades, em O(n²):
+#+begin_src cpp
+int twosum(int *v, int n) {
+	int count = 0;
+	for (int i = 0; i < n; ++i)
+		for (int j = i + 1; j < n; ++j)
+			if (v[i] + v[j] == 0)
+				++count;
+}
+#+end_src
+- Com pesquisa binária fica mais eficiente, O(n log n). Basta observar que ~a + b == 0~ é equivalente a ~a == -b~.
+#+begin_src cpp
+int twosum(int *v, int n) {
+	int count = 0;
+	sort(v.begin(), v.end())
+	for (int i = 0; i < n; ++i)
+		if ( std::upper_bound(v.begin(), v.end(), -v[i]) - std::lower_bound(v.begin(), v.end(), -v[i]) != 0 )
+			++count;
+}
+#+end_src
+* TODO 3-sum problem
+* DONE Binary Search
+- C style
+#+begin_src cpp
+int binary_search(int *v, int a, int b, int key) {
+  // 0 1 2 3
+  int middle = a + (b - a) / 2;
+
+  if (v[middle] == key) {
+    // return middle;
+    while( middle >= 0 && v[middle] == key )
+      --middle;
+    return middle + 1;
+  }
+
+  else if (middle == a)
+    return -1;
+
+  else if (v[middle] > key)
+    return binary_search(v, a, middle, key);
+
+  else if (v[middle] < key)
+    return binary_search(v, middle + 1, b, key);
+
+  else
+    return -2; // shouldn't happen!
+}
+#+end_src
+- CPP style
+#+begin_src cpp
+int binary_search(vector<int>& v, int key) {
+	return upper_bound(v.begin(), v.end(), key) - lower_bound(v.begin(), v.end(), key) != 0;
+}
+#+end_src
+* TODO BIT
+* DONE Bubble sort
+#+begin_src cpp
+void bubble_sort(int *v, int n) {
+  for (int i = n - 1; i >= 0; --i) {
+    bool swapped = false;
+    for (int j = 0; j < i; ++j) {
+      if (v[j] > v[j + 1]) {
+        swap( v[j], v[j+1] );
+        swapped = true;
+      }
+    }
+    if (!swapped)
+      break;
+  }
+}
+#+end_src
+* DONE Counting sort
+#+begin_src cpp
+void counting_sort(int *v, int n) {
+  int maior = INT_MIN;
+
+  for (int i = 0; i < n; ++i)
+    maior = max(maior, v[i]);
+
+  int *count = new int[maior + 1]; // please do not overflow...
+  memset(count, 0, (maior + 1) * sizeof(int));
+
+  for (int i = 0; i < n; ++i)
+    ++count[ v[i] ];
+
+  int qt = 0;
+  for (int i = 0; i <= maior && qt < n; ++i) {
+    if (count[i] > 0) {
+      for (int k = 0; k < count[i]; ++k)
+        v[qt++] = i;
+    }
+  }
+}
+#+end_src
+* PERFECT Crivo de Eratóstenes
+** PERFECT Crivo de Eratóstenes
+#+begin_src cpp
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <vector>
+using namespace std;
+const int MAX = int(1e6);
+bool v[MAX];
+vector<int> primos;
+
+int main() {
+  memset(v, 0, sizeof v);
+
+  for (int i = 2; i < MAX; ++i) {
+    if (v[i] == true)
+      continue;
+
+    primos.push_back(i);
+
+    for (int j = i * i; j < MAX; j += i) {
+      v[j] = true;
+    }
+  }
+
+  for (unsigned i = 0; i < primos.size(); i++)
+    printf("%d ", primos[i]);
+  puts("");
+
+  return 0;
+}
+#+end_src
+** PERFECT Crivo de Eratóstenes (otimizado)
+#+begin_src cpp
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <vector>
+using namespace std;
+const int MAX = int(1e6);
+bool v[MAX];
+vector<int> primos;
+
+int main() {
+  memset(v, 0, sizeof v);
+
+  // preprocessing for i == 2
+  for (int i = 2; i < MAX; i+=2)
+    v[i] = true;
+  primos.push_back(2);
+
+  for (int i = 3; i < MAX; i+=2) {
+    if (v[i] == true)
+      continue;
+
+    primos.push_back(i);
+
+    for (int j = i * i; j < MAX; j += 2 * i) {
+      v[j] = true;
+    }
+  }
+
+  for (unsigned i = 0; i < primos.size(); i++)
+    printf("%d ", primos[i]);
+  puts("");
+
+  return 0;
+}
+#+end_src
+* PERFECT GCD, LCM
+- Tempo logarítmico.
+- ~gcd(a,b) = gcd(b,a) = gcd(a,b-a) = gcd(b, a-b)~
+#+begin_src cpp
+int gcd(int a, int b) {
+	return !b ? a : gcd(b, a % b);
+}
+int lcm(int a, int b) {
+	return a * b / gcd(a,b)
+}
+#+end_src
+* TODO Fenwick Tree
+* DONE Insertion sort
+#+begin_src cpp
+void insertion_sort(int *v, int n) { 
+  for (int i = 0; i < n; ++i) {
+    for (int j = i; j > 0; --j) {
+      if (v[j] < v[j-1])
+        swap(v[j], v[j-1]);
+      else
+        break;
+    }
+  }
+}
+#+end_src
+
+* PROGRESS [#A] meta-External Sources
+- [X] [[http://fusharblog.com/3-ways-to-define-comparison-functions-in-cpp/]]
+- [X] http://fusharblog.com/some-tips-for-google-code-jam/#more-1470
+- [X] http://fusharblog.com/add-epsilon-before-casting-double-to-integer/
+- [ ] http://fusharblog.com/solving-linear-recurrence-for-programming-contest/
+- [ ] http://vexorian.blogspot.com.br/2010/05/google-code-jam-qualification-rounds.html
+* DONE meta-C++ References
+- [[http://www.cplusplus.com/reference/]]
+- [[http://en.cppreference.com/w/]]
+* PERFECT meta-g++ template
+- Verbose
+#+begin_src sh
+g++ -Wall -Wextra -g -lm -O2 program.cpp -o program
+#+end_src
+* PERFECT meta-GDB
+- To get backtraces.
+#+begin_src sh
+gdb ./program
+run arg1 arg2 < program.in
+bt
+frame <stack_number>
+print <var_name>
+watch/rwatch/awatch <var_name>
+continue
+#+end_src
+* TODO Merge sort
+* TODO Quick Sort
+* TODO Segment Tree
+* DONE Selection sort
+#+begin_src cpp
+void selection_sort(int *v, int n) {
+  int imenor;
+  for (int i = 0; i < n;  ++i) {
+    int menor = INT_MAX;
+    for (int j = i; j < n; ++j) {
+      if (v[j] < menor) {
+        imenor = j;
+        menor = v[j];
+      }
+    }
+    swap( v[i], v[imenor] );
+  }
+}
+#+end_src
+* PERFECT std-algorithm Advance
+#+begin_src cpp
+int _v[] = {1, 2, 3, 4, 5};
+vector<int> v(_v, _v + sizeof(_v)/sizeof(int));
+vector<int>::iterator it = v.begin();
+*it; // --> 1
+std::advance(it, 2);
+*it; // --> 3
+std::advance(it, -1);
+*it; // --> 2
+#+end_src
+* PERFECT std-algorithm Distance
+- If RandomAccessIterator :: constant time
+- Else :: linear time (one by one, forward)
+#+begin_src cpp
+vector<int> v(10, 0);
+std::distance(v.begin(), v.end()); // --> 10
+std::distance(v.end(), v.begin()); // --> -10
+set<int> s(v.begin(), v.end());
+std::distance(s.begin(), s.end()); // --> 10
+std::distance(s.end(), s.begin()); // --> infinite loop
+int _v[] = {1, 2, 3, 4};
+std::distance(_v, _v + sizeof(_v)/sizeof(int)); // --> 10
+std::distance(_v, _v + sizeof(_v)/sizeof(int)); // --> -10
+std::distance(_v, _v + 3) // --> 3
+#+end_src
+* PERFECT std-algorithm Lower and Upper Bound
+Returns an iterator.
+- lower_bound :: ~>=~
+- upper_bound :: ~>~
+#+begin_src cpp
+lower_bound(v.begin(), v.end(), key); // --> >= key
+upper_bound(v.begin(), v.end(), key); // --> > key
+lower_bound(v.begin(), v.end(), key) - v.begin(); // --> position (index)
+upper_bound(v.begin(), v.end(), key) - lower_bound(v.begin(), v.end(), key); // --> quantity / count. If 0, there is no key.
+#+end_src
+* PERFECT std-algorithm Next Permutation
+#+begin_src cpp
+string s = "abc";
+std::next_permutation(s.begin(), s.end()); // --> "acb", return true
+std::next_permutation(s.begin(), s.end()); // --> "acb", return true
+std::next_permutation(s.begin(), s.end()); // --> "bac", return true
+std::next_permutation(s.begin(), s.end()); // --> "bca", return true
+std::next_permutation(s.begin(), s.end()); // --> "cab", return true
+std::next_permutation(s.begin(), s.end()); // --> "cba", return true
+std::next_permutation(s.begin(), s.end()); // --> "abc", return false (wrapped)
+std::next_permutation(s.begin(), s.begin() + 1); // --> "bac", return true
+std::next_permutation(s.begin(), s.begin() + 1); // --> "abc", return false
+vector<int> v{1, 2, 3};
+std::next_permutation(v.begin(), v.end()); // --> [1,3,2]
+// WARNING: this doesn't work with C vectors
+int v[] = {1,2,3};
+std::next_permutation(v.begin(), v.end()); // --> [1,2,3], NO EFFECT!
+#+end_src
+  
+* PERFECT std-algorithm Partial Sort
+Sorts a sequence partially. You have to specify:
+- begin
+- middle
+- end
+Range considered will be from begin to end; only ~middle - begin~ elements will be sorted.
+#+begin_src cpp
+vector<int> v = {8, 7, 6, 5, 4, 3, 2, 1};
+partial_sort(v.begin(), v.begin() + 5, v.end()); // v --> 1, 2, 3, 4, 5, **, **, **
+partial_sort(v.begin(), <middle>, v.end(), <compare_function>);
+#+end_src
+* PERFECT std-algorithm Reverse
+#+begin_src cpp
+int v[10];
+vector<int> v;
+std::reverse(v.begin(), v.end());
+std::reverse(v, v + sizeof(v)/sizeof(int));
+#+end_src
+* PERFECT std-algorithm Stable Sort
+- Diferença em relação ao sort: preserva a ordem dos elementos (não troca keys iguais)
+#+begin_src cpp
+stable_sort(v.begin(), v.end());
+#+end_src
+* PERFECT std-algorithm Sort
+A função de comparação pode ser uma função normal ou pode ser o
+functor ~operator()~ de uma classe. Em todo caso, ~< 0~ significa que
+está ordenado, ~> 0~ significa que está desordenado. Não há a
+necessidade de se considerar ~== 0~ (isto é, tanto faz).
+#+begin_src cpp
+sort(v.begin(), v.end()); // --> increasing order
+sort(v.begin(), v.end(), less<int>()); // --> increasing order, this is the default
+sort(v.begin(), v.end(), greater<int>()); // --> decreasing order
+sort(v, v + sizeof(v)/sizeof(int)); // C vector
+class myclass {
+	bool operator()(const int a, const int b) {
+		return a < b;
+	}
+} myobject;
+sort(v.begin(), v.end(), myobject); // myclass won't work; only objects! Static classes won't work also.
+bool myfunction(const int a, const int b) { // alt: a function
+	return a < b;
+}
+sort(v.begin(), v.end(), myfunction);
+#+end_src
+* PERFECT std-c <cctype>
+#+begin_src c
+char c;
+// call a typical function as: function(c) or function('a');
+isupper('a'); // --> 0 (aka false) A-Z
+islower('a'); // --> 1 (aka true) a-z
+isdigit('0'); // --> 0-9 
+isspace(' '); // --> spaces, tabs, newlines
+isalnum('0'); // --> alphanumeric, a-zA-Z0-9
+isalpha('a'); // --> alphabet, a-zA-Z
+tolower('C'); // --> return 'c'
+toupper('c'); // --> return 'C'
+#+end_src
+* PERFECT std-c <climits>
+- INT_MIN :: -2147483648
+- INT_MAX :: 2147483647 = 2^31
+* PERFECT std <functional>
+Function objects:
+- ~less<int>();~
+- ~greater<int>();~
+
+Equivalent to:
+#+begin_src cpp
+bool myless (const int& a, const int& b) {
+	return a < b;
+}
+
+bool mygreater (const int& a, const int& b) {
+	return a > b;
+}
+#+end_src
+* PERFECT std <limits>
+  Funções estáticas genéricas.
+#+begin_src cpp
+std::numeric_limits<int>::min();    // --> - 2147483648 = 1 << 31
+std::numeric_limits<int>::max();    // --> + 2147483647 = 1 << 31 - 1, overflow
+std::numeric_limits<double>::min(); // --> 0.000...
+std::numeric_limits<double>::max(); // --> huge
+std::numeric_limits<double>::infinity(); // --> +∞ might be used for floyd warshall, for example
+-std::numeric_limits<double>::infinity(); // --> -∞
+#+end_src
+* PERFECT std <priority queue>
+#+begin_src cpp
+priority_queue<int> q;
+q.push(1); // (1)
+q.push(0); // (1) 0
+q.push(2); // (2) 0 1
+// a ordem dos outros não é garantida, apenas a do topo...
+q.top();
+q.pop();
+q.empty();
+q.size();
+priotiry_queue<int, std::vector<int>, std::greater<int> > q;
+#+end_src
+* PERFECT std <map>
+#+begin_src cpp
+// **key**, value
+map<int, string> m;
+m[1] = "alfa"; // { 1 : "alfa" }
+m[2] = "beta"; // { 1 : "alfa", 2 : "beta" }
+assert ( m.size() == 2 ) ;
+m.insert( pair<int,string>(1, "alfa") );
+map<int, string>::iterator it = m.begin();
+m.end()
+m.empty()
+m.clear()
+m.erase(1);
+m.erase(ita);
+m.erase(ita, itb);
+it->first;
+it->second;
+#+end_src
+* PERFECT std <multimap>
+#+begin_src cpp
+multimap<int, string> mm;
+mm.insert( pair<int,string>(1, "alpha") );
+// não existe [] para multimap!
+mm.insert( make_pair(1, "alpha") );
+// OBS.: ordem de inserção!
+// para tomar os elementos:
+// 1) iterator
+multimap<int, string>::iterator it = mm.begin();
+it->first, it->second;
+++it;
+// 2) lower_bound, upper_bound, find
+mm.count(1) // > 1, eventualmente
+mm.find(1);
+mm.lower_bound(1);
+mm.upper_bound(1);
+#+end_src
+* PERFECT std <multiset>
+#+begin_src cpp
+multiset<int> ms;
+ms.insert(1); // 1
+ms.insert(2); // 1 2
+ms.insert(1); // 1 1 2
+// OBS.: ordena pela ordem de comparação! Por exemplo, se multiset<int,string>
+assert(ms.size() == 3);
+ms.erase(1); // 2
+ms.empty();
+ms.lower_bound(1); // iterator para o primeiro 1
+ms.upper_bound(1); // iterator para logo depois do último 1 (para o 2, nesse caso)
+.count() // > 1, eventualmente
+.find() // sempre para o primeiro
+#+end_src
+* PERFECT std <pair>
+#+begin_src cpp
+#include <utility>
+pair<int, int> p(1,2);
+pair<int, string> p(0, "qwerty");
+p = pair<int,int>(1, 2); // --> constructor
+p = make_pair(1,2); // --> alternative (implicit) constructor
+p.first;
+p.second;
+#+end_src
+* PERFECT std <queue>
+#+begin_src cpp
+queue<int> q;
+q.enqueue(1); // 1
+q.enqueue(2); // 1 2
+assert( q.front() == 1 );
+assert( q.back() == 2);
+q.dequeue(); // 2
+q.empty();
+q.size();
+#+end_src
+* PERFECT std <set>
+#+begin_src cpp
+set<int> s;
+s.insert(1); // 1
+s.insert(2); // 1 2
+s.insert(1); // 1 2
+assert( s.size() == 2);
+s.empty();
+s.erase(1); // 2
+s.erase(ita);
+s.erase(ita, itb); // erase [ita,itb)
+s.insert(ita, itb);
+set<int>::iterator it = s.begin();
+s.end();
+s.clear();
+s.find() != s.end();
+s.count != 0;
+set<int>::iterator it = s.lower_bound(3); // >= ; it != s.end()?
+s.upper_bound(3); // > ; it != s.end()?
+set<int, std::greater<int> > s; // increasing order -- this is the default
+set<int, std::greater<int> > s; // decreasing order now
+#+end_src
+* PERFECT std <stack>
+#+begin_src cpp
+stack<int> s;
+s.push(1); // 1
+s.push(2); // 1 2
+assert( s.top() == 2 );
+s.pop();   // 1
+s.empty();
+while ( !s.empty() ) s.pop();
+s = stack<int> s();
+s.size()
+#+end_src
+* PERFECT std <vector>
+#+begin_src cpp
+vector<int> v;
+vector<int> w;
+vector<int> v(100, 0); // 100 elementos iguais a zero
+vector<int> v(ita, itb);
+vector<int> v = vector<int>();
+v.clear();
+v.push_back(1);
+v.push_back(2);
+v.pop_back(); // raramente utilizado...
+v[1] = 10;
+v.at(1) = 10; // com checagem dos limites do vetor; raramente utilizado
+vector<int> v;
+v.assign(100, 0); // equivalente a v = vector<int>(100,0);
+vector<int> v = w;            // copy
+vector<int> v(w);             // copy
+vector<int> v(w.begin(), w.end());
+v.front();
+v.back();
+vector<int>::iterator it = v.begin(); // iterator: primeiro elemento
+vector<int>::iterator it = v.end();   // iterator: depois do último elemento
+.empty() // --> true or false
+.size()
+.erase(iterator)
+.erase(ita, itb)
+!=, ==, <, <=, >, >= // --> elemento a elemento 
+#+end_src
+* DONE STD :: <cstdio>
+#+begin_src c
+char mychar;
+int myint;
+char mystring[100];
+scanf("%d", &myint) == 1;
+scanf("%d%d%c", &myint, &myint2, &mychar) == 3;
+// != -1
+scanf("%s", mystring) == 1;
+scanf("%[^\n]\n", mystring);
+scanf("%d %*d", &myint);
+scanf("%lf", &mydouble);
+scanf("%f", &myfloat);
+gets(mystring); // até \n (mas não lê o \n), != NULL
+getchar(mychar); // != NULL
+printf("%d\n", myint);
+printf("%c\n", mychar);
+printf("%d %d\n", myint, myint2);
+printf("%s\n", mystring);
+printf(".2f\n", myfloat);
+printf("%lf\n", mydouble);
+printf("%02d\n", myint); // colocar zeros à esquerda
+printf("%-5d\n", myint); // alinhar à esquerda
+printf("%+d\n", myint);  // explicitar o sinal
+puts(mystring); // com '\n'
+puts("ei");
+putchar('a');
+mycppstring.c_str(); // --> com '\0'
+#+end_src
+- Não se esquecer de ~sscanf(str, ...)~ e ~sprintf(str, ...)~.
+* DONE STD :: <cmath>
+#+begin_src cpp
+double x = -0.5;
+abs(x); // --> |x|
+sin(x), cos(x), tan(x);
+asin(x), acos(x), atan(y/x), atan2(y,x);
+pow(base,exp);
+exp(x); // --> e^x
+log(x); // --> log_{e}(x)
+log10(x);
+floor(x); // --> int(x);
+ceil(x);
+sqrt(x);
+sinh(x), cosh(x), tanh(x);
+#+end_src
+* DONE STD :: <cstring>
+#+begin_src cpp
+char *a = "alfafa";
+char a[] = "alfafa";
+char a[7] = "alfafa";
+char a[7] = {'a', 'l', 'f', 'a', 'f', 'a', '\0'};
+strlen(a); // --> 6 (não conta o '\0')
+strcpy(a, "asd"); // --> "construtor"
+strcat(a, b);     // "a = a + b" (concatenador)
+a + 1; // --> lfafa;
+a++; // --> lfafa;
+strcmp(a, b); // --> como a - b: 0 se iguais, 1 se a maior, -1 se a menor
+// versões com n:
+strncpy(), strncat(), strncmp(); // n no final
+memset(v, 0, sizeof v);
+memset(v, -1, sizeof v);
+memset(str, 'a', sizeof str);
+memset(str, 'a', 10*sizeof(char)); // more reliable
+char a[] = "asq jhs,ajks qiwj"; // cuidado com char*
+char* p = strtok(a, " ,"); // não serve string literal
+p = strtok(NULL, " ,");
+// p: assume o próximo token, ou NULL se não tem mais
+// usar NULL para continuar na string anterior
+// tokens podem ser mudados dinamicamente -- apenas cuidado
+char base[]="to do or not to do";
+char* p = strstr(base, "do");
+while (p) {
+	puts(p);
+	printf("%d\n", std::distance(a, p);
+	p = strstr(p + 1, "do");
+}
+// strchr: similar a strstr
+#+end_src
+* DONE STL::Bitset
+#+begin_src cpp
+bitset<32> b("10001010");
+// string: da esquerda para a direita
+// bitset: da direita para a esquerda
+bitset<32> b(105);
+b.to_string();
+b.to_ulong();
+b.reset(); // --> 000000... (inplace)
+b.reset(1); // reset bit at position 1
+b.set(); // --> 111111 (inplace)
+b.set(1, true);  // set bit 1 to true
+b.set(1, false); // set bit 1 to false
+b.size() // --> 32
+// operadores usuais: >>, <<, !, &, ~, etc
+b[2], b[3]; 
+.any();  // true se pelo menos um 1
+.none(); // --> true se 000....
+// para dar trim em zeros: converter para ulong ou converter para string e usar ranges
+#+end_src
+* DONE STL::Deque
+Um vector mais poderoso. Operações adicionais geralmente incluem a remoção e a inserção de elementos, como em listas.
+#+begin_src cpp
+push_back();
+pop_back();
+push_front();
+pop_front();
+erase(ita);
+erase(ita,itb);
+// insert como em lista
+#+end_src
+* TODO STL::List
+:NEXT:
+- [ ] Operações específicas de lista, tais como emplace, merge, etc.
+:END:
+- *Lenta, extremamente lenta, cuidado!*.
+- Métodos bastante parecidos com os da [[STL::Deque]].
+#+begin_src cpp
+list<int> l(v.begin(), v.end());
+list<int>::iterator it = // ...
+// como construtor de vetor:
+l.insert(it, 1); // antes de it: [...,1,*it,...]
+l.insert(it, 100, 0); // 100 elementos iguais a zero
+l.insert(it, ita, itb);
+#+end_src
+* TODO [#A] STL::String
+* TODO Input (cin, gets, getchar, scanf)
+* TODO Output (cout, puts, putchar, printf)
+* TODO Exemplos-Grafos.cpp
+#+begin_src cpp
+#include <vector>
+#include <list>
+#include <map>
+#include <set>
+#include <queue>
+#include <deque>
+#include <stack>
+#include <bitset>
+#include <algorithm>
+#include <functional>
+#include <numeric>
+#include <utility>
+#include <sstream>
+#include <iostream>
+#include <iomanip>
+#include <cstdio>
+#include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <string.h>
+#include <valarray>
+
+using namespace std;
+
+// ======= Articulação ======
+
+void dfs(int v,int pai){
+	int nf=0,u,min1;
+	bool art = false;
+	
+	mark[v] = 1;
+	pe[v] = prof++;
+	lowpt[v] = pe[v];
+	
+	min1 = pe[v];
+	
+	for(int i=0; i < (int) g[v].size();i++){
+		u = g[v][i];
+		if(u == pai) continue;
+		
+		if(!mark[u]){
+			nf++;
+			dfs(u,v);
+			lowpt[v] = min(lowpt[v],lowpt[u]);
+			if(lowpt[u] >= pe[v])
+				art = true;
+		}else{
+			min1 = min(min1,pe[u]);
+		}
+	}
+	
+	lowpt[v] = min( lowpt[v], min1);
+	
+	if(pai == -1){
+		if(nf > 1)
+			resp.insert(place[v]);
+	}else{
+		if(nf > 0 && art)
+			resp.insert(place[v]);
+	}
+	
+}
+
+// ======= Dijkstra O(n^2) ======
+
+#define INF (1<<29)
+#define MAXN (1024)
+
+vector< pair<int,int> > g[MAXN]; // par (indice_vértice, peso_aresta)
+int dist[MAXN];
+char mark[MAXN];
+
+void diskstra(int s, int n){
+	
+	memset(mark,0,sizeof(mark));
+
+	for(i=0;i<n;i++)
+		dist[i] = INF;
+	
+	//pai[s] = -1;
+	dist[s] = 0;
+	
+	while(1){
+		int mind = INF,mini = -1;
+		// Acha o vértice não marcado com menor distância
+		for(i=0;i<n;i++){
+			if(!mark[i] && dist[i] < mind){
+				mind = dist[i];
+				mini = i;
+			}
+		}
+		
+		if(mini == -1) break; // nao achou ninguem
+		v = mini;
+		
+		mark[v] = 1;
+		// atualiza vizinhos de v
+		for(i=0;i<g[v].size();i++){
+			u = g[v][i].first;
+			w = g[v][i].second;
+			
+			if(!mark[u] && dist[v]+w < dist[u]){
+				dist[u] = dist[v]+w;
+				//pai[u] = v;
+			}
+		}
+		
+	}	
+}
+
+// ======= Dijkstra O(mlogn) ======
+
+set< pair<int,int> > heap;
+
+void diskstra2(int s, int n){
+	
+	memset(mark,0,sizeof(mark));
+
+	for(i=0;i<n;i++)
+		dist[i] = INF;
+	
+	//pai[s] = -1;
+	dist[s] = 0;
+	heap.clear();
+	heap.insert(make_pair(0,s));
+	
+	while(1){
+		int mind = INF,mini = -1;
+		// Acha o vértice não marcado com menor distância
+		if(heap.empty()) break;
+		
+		v = (heap.begin())->second;
+		mark[v] = 1;
+		heap.erase(heap.begin());
+		
+		// atualiza vizinhos de v
+		for(i=0;i<g[v].size();i++){
+			u = g[v][i].first;
+			w = g[v][i].second;
+			
+			if(!mark[u] && dist[v]+w < dist[u]){
+				heap.erase(make_pair(dist[u],u));
+				dist[u] = dist[v]+w;
+				heap.insert(make_pair(dist[u],u));
+				//pai[u] = v;
+			}
+		}		
+	}	
+}
+
+// ======= Bellman Ford ======
+
+bool relaxa(int v,u,w){
+	if(dist[v] + w < dist[u]){
+		dist[u] = dist[v]+w;
+		return true;
+	}
+	return false;
+}
+
+void bellmanford(int s,int n){
+	
+	for(i=0;i<n;i++)
+		dist[i] = INF;
+	
+	dist[s] = 0;
+	
+	for(i=0;i<n-1;i++){
+		// relaxa todas as arestas
+		for(v=0;v<n;v++)
+			for(k=0;k<g[v].size();k++){
+				u = g[v][k].first;
+				w = g[v][k].second;
+				relaxa(v,u,w);
+			}
+	}
+	// distâncias mínimas calculadas
+	
+	// checa se existe ciclo negativo
+	
+	for(v=0;v<n;v++)
+		for(k=0;k<g[v].size();k++){
+			u = g[v][k].first;
+			w = g[v][k].second;
+			if(relaxa(v,u,w))
+				// tem ciclo negativo
+		}
+	
+}
+
+// ======= Floyd ======
+
+int dist[MAXN][MAXN];
+
+void floyd(int n){
+	
+	for(i=0;i<n;i++)
+		for(j=0;j<n;j++){
+			if(i == j) dist[i][j] = 0;
+			else dist[i][j] = INF;
+		}
+	
+	
+	for(v=0;v<n;v++)
+		for(k=0;k<g[v].size();k++){
+			u = g[v][k].first;
+			w = g[v][k].second;
+			dist[v][u] = w;
+		}
+		
+	for(k=0;k<n;k++)
+		for(i=0;i<n;i++)
+			for(j=0;j<n;j++){
+				dist[i][j] = max (dist[i][j], max(dist[i][k], dist[k][j]) );
+			}
+}
+
+// ======= Prim ======
+
+void prim(int s, int n){
+	// dist[v] passa o peso da menor aresta que vai de um vértice marcado para v
+	
+	memset(mark,0,sizeof(mark));
+
+	for(i=0;i<n;i++)
+		dist[i] = INF;
+	
+	//pai[s] = -1;
+	dist[s] = 0;
+	
+	while(1){
+		int mind = INF,mini = -1;
+		// Acha o vértice não marcado com menor distância
+		for(i=0;i<n;i++){
+			if(!mark[i] && dist[i] > mind){
+				mind = dist[i];
+				mini = i;
+			}
+		}
+		
+		if(mini == -1) break; // nao achou ninguem
+		v = mini;
+		
+		mark[v] = 1;
+		// atualiza vizinhos de v
+		for(i=0;i<g[v].size();i++){
+			u = g[v][i].first;
+			w = g[v][i].second;
+			
+			if(!mark[u] && w < dist[u]){
+				dist[u] = w;
+				//pai[u] = v;
+			}
+		}
+		
+	}	
+}
+
+// ======= Kruskal ======
+
+struct aresta{
+	int u,v,w;
+	bool operator<(const aresta &a) const{
+		if(w < a.w) return true;
+	}
+};
+
+vector<aresta> ar;
+
+void kruskal(int n){
+	// inicializa union find
+	
+	sort(ar.begin(),ar.end()); // ordena arestas em ordem crescente de peso
+	
+	resp = 0;
+	nar = 0;
+	for(i=0;i<ar.size();i++){
+		v = ar.v; u = ar.u; w = ar.w;
+		if(!same(v,u)){
+			une(v,u);
+			resp += w;
+			nar++;
+		}
+		if(nar == n-1) break;
+	}
+	
+}
+#+end_src
+
+* TODO BigNum Neal Wu
+#+begin_src cpp
+/**
+ * BigNum
+ * Author: Neal Wu
+ */
+
+#include <cstdio>
+#include <cstring>
+#include <algorithm>
+#include <limits>
+using namespace std;
+
+const int MAXD = 1005, DIG = 9, BASE = 1000000000;
+const unsigned long long BOUND = numeric_limits <unsigned long long> :: max () - (unsigned long long) BASE * BASE;
+
+struct bignum
+{
+    int D, digits [MAXD / DIG + 2];
+
+    inline void trim ()
+    {
+        while (D > 1 && digits [D - 1] == 0)
+            D--;
+    }
+
+    inline void init (long long x)
+    {
+        memset (digits, 0, sizeof (digits));
+        D = 0;
+
+        do
+        {
+            digits [D++] = x % BASE;
+            x /= BASE;
+        }
+        while (x > 0);
+    }
+
+    inline bignum (long long x)
+    {
+        init (x);
+    }
+
+    inline bignum (int x = 0)
+    {
+        init (x);
+    }
+
+    inline bignum (char *s)
+    {
+        memset (digits, 0, sizeof (digits));
+        int len = strlen (s), first = (len + DIG - 1) % DIG + 1;
+        D = (len + DIG - 1) / DIG;
+
+        for (int i = 0; i < first; i++)
+            digits [D - 1] = digits [D - 1] * 10 + s [i] - '0';
+
+        for (int i = first, d = D - 2; i < len; i += DIG, d--)
+            for (int j = i; j < i + DIG; j++)
+                digits [d] = digits [d] * 10 + s [j] - '0';
+
+        trim ();
+    }
+
+    inline char *str ()
+    {
+        trim ();
+        char *buf = new char [DIG * D + 1];
+        int pos = 0, d = digits [D - 1];
+
+        do
+        {
+            buf [pos++] = d % 10 + '0';
+            d /= 10;
+        }
+        while (d > 0);
+
+        reverse (buf, buf + pos);
+
+        for (int i = D - 2; i >= 0; i--, pos += DIG)
+            for (int j = DIG - 1, t = digits [i]; j >= 0; j--)
+            {
+                buf [pos + j] = t % 10 + '0';
+                t /= 10;
+            }
+
+        buf [pos] = '\0';
+        return buf;
+    }
+
+    inline bool operator < (const bignum &o) const
+    {
+        if (D != o.D)
+            return D < o.D;
+
+        for (int i = D - 1; i >= 0; i--)
+            if (digits [i] != o.digits [i])
+                return digits [i] < o.digits [i];
+
+        return false;
+    }
+
+    inline bool operator == (const bignum &o) const
+    {
+        if (D != o.D)
+            return false;
+
+        for (int i = 0; i < D; i++)
+            if (digits [i] != o.digits [i])
+                return false;
+
+        return true;
+    }
+
+    inline bignum operator << (int p) const
+    {
+        bignum temp;
+        temp.D = D + p;
+
+        for (int i = 0; i < D; i++)
+            temp.digits [i + p] = digits [i];
+
+        for (int i = 0; i < p; i++)
+            temp.digits [i] = 0;
+
+        return temp;
+    }
+
+    inline bignum operator >> (int p) const
+    {
+        bignum temp;
+        temp.D = D - p;
+
+        for (int i = 0; i < D - p; i++)
+            temp.digits [i] = digits [i + p];
+
+        for (int i = D - p; i < D; i++)
+            temp.digits [i] = 0;
+
+        return temp;
+    }
+
+    inline bignum range (int a, int b) const
+    {
+        bignum temp = 0;
+        temp.D = b - a;
+
+        for (int i = 0; i < temp.D; i++)
+            temp.digits [i] = digits [i + a];
+
+        return temp;
+    }
+
+    inline bignum operator + (const bignum &o) const
+    {
+        bignum sum = o;
+        int carry = 0;
+
+        for (sum.D = 0; sum.D < D || carry > 0; sum.D++)
+        {
+            sum.digits [sum.D] += (sum.D < D ? digits [sum.D] : 0) + carry;
+
+            if (sum.digits [sum.D] >= BASE)
+            {
+                sum.digits [sum.D] -= BASE;
+                carry = 1;
+            }
+            else
+                carry = 0;
+        }
+
+        sum.D = max (sum.D, o.D);
+        sum.trim ();
+        return sum;
+    }
+
+    inline bignum operator - (const bignum &o) const
+    {
+        bignum diff = *this;
+
+        for (int i = 0, carry = 0; i < o.D || carry > 0; i++)
+        {
+            diff.digits [i] -= (i < o.D ? o.digits [i] : 0) + carry;
+
+            if (diff.digits [i] < 0)
+            {
+                diff.digits [i] += BASE;
+                carry = 1;
+            }
+            else
+                carry = 0;
+        }
+
+        diff.trim ();
+        return diff;
+    }
+
+    inline bignum operator * (const bignum &o) const
+    {
+        bignum prod = 0;
+        unsigned long long sum = 0, carry = 0;
+
+        for (prod.D = 0; prod.D < D + o.D - 1 || carry > 0; prod.D++)
+        {
+            sum = carry % BASE;
+            carry /= BASE;
+
+            for (int j = max (prod.D - o.D + 1, 0); j <= min (D - 1, prod.D); j++)
+            {
+                sum += (unsigned long long) digits [j] * o.digits [prod.D - j];
+
+                if (sum >= BOUND)
+                {
+                    carry += sum / BASE;
+                    sum %= BASE;
+                }
+            }
+
+            carry += sum / BASE;
+            prod.digits [prod.D] = sum % BASE;
+        }
+
+        prod.trim ();
+        return prod;
+    }
+
+    inline double double_div (const bignum &o) const
+    {
+        double val = 0, oval = 0;
+        int num = 0, onum = 0;
+
+        for (int i = D - 1; i >= max (D - 3, 0); i--, num++)
+            val = val * BASE + digits [i];
+
+        for (int i = o.D - 1; i >= max (o.D - 3, 0); i--, onum++)
+            oval = oval * BASE + o.digits [i];
+
+        return val / oval * (D - num > o.D - onum ? BASE : 1);
+    }
+
+    inline pair <bignum, bignum> divmod (const bignum &o) const
+    {
+        bignum quot = 0, rem = *this, temp;
+
+        for (int i = D - o.D; i >= 0; i--)
+        {
+            temp = rem.range (i, rem.D);
+            int div = (int) temp.double_div (o);
+            bignum mult = o * div;
+
+            while (div > 0 && temp < mult)
+            {
+                mult = mult - o;
+                div--;
+            }
+
+            while (div + 1 < BASE && !(temp < mult + o))
+            {
+                mult = mult + o;
+                div++;
+            }
+
+            rem = rem - (o * div << i);
+
+            if (div > 0)
+            {
+                quot.digits [i] = div;
+                quot.D = max (quot.D, i + 1);
+            }
+        }
+
+        quot.trim ();
+        rem.trim ();
+        return make_pair (quot, rem);
+    }
+
+    inline bignum operator / (const bignum &o) const
+    {
+        return divmod (o).first;
+    }
+
+    inline bignum operator % (const bignum &o) const
+    {
+        return divmod (o).second;
+    }
+
+    inline bignum power (int exp) const
+    {
+        bignum p = 1, temp = *this;
+
+        while (exp > 0)
+        {
+            if (exp & 1) p = p * temp;
+            if (exp > 1) temp = temp * temp;
+            exp >>= 1;
+        }
+
+        return p;
+    }
+};
+
+inline bignum gcd (bignum a, bignum b)
+{
+    bignum t;
+
+    while (!(b == 0))
+    {
+        t = a % b;
+        a = b;
+        b = t;
+    }
+
+    return a;
+}
+
+const int MAXN = 1005;
+
+int TC = 1, C, N;
+bignum events [MAXN];
+char str [MAXD];
+
+int main ()
+{
+    for (scanf ("%d", &C); TC <= C; TC++)
+    {
+        scanf ("%d", &N);
+
+        for (int i = 0; i < N; i++)
+        {
+            scanf ("%s", str);
+            events [i] = str;
+        }
+
+        sort (events, events + N);
+        bignum last = events [0];
+
+        for (int i = 0; i < N; i++)
+            events [i] = events [i] - last;
+
+        bignum g = 0;
+
+        for (int i = 0; i < N; i++)
+            g = gcd (g, events [i]);
+
+        bignum sol = (g - last % g) % g;
+        printf ("Case #%d: %s\n", TC, sol.str ());
+    }
+
+    return 0;
+}
+#+end_src
+  

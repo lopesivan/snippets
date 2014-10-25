@@ -1,0 +1,44 @@
+---
+layout: post
+title:  "Template (CODE)"
+date:   2014-01-01 00:00:00
+tags: meta
+---
+
+# Código
+
+{% highlight c++ %}
+{% endhighlight %}
+
+# Otimizado
+
+{% highlight c++ %}
+{% endhighlight %}
+
+
+# Testes
++ [regex.cpp]({{ site.baseurl }}{{ site.code }}/regex.cpp)
++ [regex.in]({{ site.baseurl }}{{ site.code }}/regex.in)
++ [regex.out]({{ site.baseurl }}{{ site.code }}/regex.out)
+
+
+# Aplicações
++ Aplicação 1;
++ Aplicação 2.
+
+
+# Complexidade
++ n = número de elementos
++ Temporal (pior caso): O(n²)
++ Temporal (caso médio): O(n²)
++ Temporal (melhor caso): O(n)
++ Memória: O(n)
+
+
+# Comentários
++ Comment 1;
++ Comment 2.
+
+
+# See also
++ [http://www.example.com/](Example)

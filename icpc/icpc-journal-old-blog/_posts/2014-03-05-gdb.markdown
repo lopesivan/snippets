@@ -1,0 +1,46 @@
+---
+layout: post
+title:  "GDB Debugging"
+date:   2014-03-05 19:48:00
+comments: true
+tags: debugging
+---
+
+# Running
+
+* Compilar o programa com a flag -g: `g++ program.cpp -o program -Wall -g`
+* `./program` ⇒ constatei alguma anormalidade, e agora?
+* Se estiver em um loop infinito, `C-c`.
+* Rodar o gdb: `gdb ./bin` ou `gdb` e depois `file bin` para selecionar o executável.
+* Rodamos o programa sob a guarda do gdb com `run`.
+* Para especificar argumentos, basta fazer `run arg1 arg2 ... `.
+* Para redirecionamento de entrada, `run < source.in`. Não recomendo redirecionar a saída.
+* Para sair do GDB, `quit` (*e não* `exit`).
+
+# Debugging
+
+* Cenário mais comum: utilize `bt` ou `backtrace` para visualizar a pilha.
+* Caso haja mais de uma, e você queira detalhá-la, utilize `frame <numero_da_pilha>`. Por exemplo, `frame 1`.
+* Para ver o valor de uma variável no ponto de execução (e no escopo) atual, utilize `print <var_name>`. Por exemplo, `print i`.
+* Para criar um breakpoint, faça `break <line_number>`, ou `break <function_name>`.
+* Para continuar a execução do programa, `continue` ou `c`.
+* Para ir de passo em passo, `next` ou `step`. O `step` segue as chamadas de função (adentra), enquanto o `next` passa direto.
+* Para retornar de uma função, `finish`.
+
+Isso cobre 99% dos casos. Eis algumas funcionalidades mais avançadas:
+
+* Se você quiser ajuda, `help`.
+* Para pesquisar por uma palavra-chave, `apropos <keyword>`.
+* Obter informações sobre vários aspectos relacionados ao GDB (ou ao programa atual): `info`.
+* Para visualizar todos os breakpoints criados, `info breakpoints`.
+* Para deletar um breakpoint, `clear <line_number>` ou `clear <function_name>`.
+* Para apenas desabilitar um breakpoint, `disable <breakpoint_number>`.
+* O comando `ignore` serve para que você possa ignorar os próximos `breakpoints` um dado número de vezes.
+* Para modificar uma variável, `set var i = 1`, por exemplo.
+* Para chamar uma função, `call func(arg1, arg2, ...)`
+* Para visualizar o código-fonte ao redor de uma linha ou de uma função, faça `list <line_number>` ou `list <function_name>`.
+* Para visualizar um backtrace (na verdade, um frame) com mais detalhes ainda: `info frame`, `info args`, `info locals`.
+* Watchpoints: `watch` (escrita), `rwatch` (leitura) e `awatch` (ambos). Triggers em variáveis. Bem útil, até. Pode ser *disablado* também.
+
+# See also
++ [http://www.unknownroad.com/rtfm/gdbtut/gdbtoc.html](http://www.unknownroad.com/rtfm/gdbtut/gdbtoc.html)

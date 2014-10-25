@@ -1,0 +1,39 @@
+---
+layout: post
+title:  "GCD"
+date:   2014-03-05 22:55:00
+comments: true
+tags: math
+---
+
+# Código
+
+{% highlight c++ %}
+int gcd_recursive(int a, int b) {
+  if (!b)
+    return a;
+  else
+    return gcd_recursive(b, a % b);
+}
+{% endhighlight %}
+
+# Testes
+
+* [gcd.cpp]({{ site.baseurl }}{{ site.code }}/gcd.cpp)
+* [gcd.in]({{ site.baseurl }}{{ site.code }}/gcd.in)
+* [gcd.out]({{ site.baseurl }}{{ site.code }}/gcd.out)
+
+# Complexidade
+
++ a, b = entradas
++ Temporal: `O(log max(a,b) )`. Explicação um pouco sutil.
+
+# Comentários
+* Teorema de Euclides: gcd(a, b) = gcd(b, a) = gcd(a, a % b) = gcd(b, a % b)
+* gcd(a,0) = a
+* gcd(0,0) = 0 (convenção)
+* Pior caso: dois números de Fibonacci consecutivos (demonstração por indução)
+* Alt: Versão iterativa.
+
+# See also
+* [https://en.wikipedia.org/wiki/Greatest_common_divisor](https://en.wikipedia.org/wiki/Greatest_common_divisor)
