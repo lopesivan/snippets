@@ -1,0 +1,61 @@
+#+TITLE: Computer Graphics @ UFRJ
+
+* Overview
+
+This is an experiment from my Computer Graphics class. No, actually,
+this is just a public archive of my files. Please do not expect me to
+document everything (I won't): this repository might be deleted at any
+time, or I might simply stop pushing my changes to here. Anyway, feel
+free to watch it if you want. 
+
+What is the purpose of this? Sharing! Sharing is caring, as they say.
+I don't like duplication of effort, so feel free to use this
+repository as a way of not reinventing the wheel. 
+
+Based on:
+- http://www.lcg.ufrj.br/Cursos/CGECI
+- http://www.cs.umd.edu/class/fall2011/cmsc427/
+
+* License
+
+Everything in this repository is available under the MIT LICENSE.
+For details, see ~LICENSE~.
+
+* Dependencies
+- g++ (C++ compiler)
+- a decent text editor (such as emacs or vim) OR a decent IDE (such as QtCreator)
+- cmake (preferably 2.8.8+)
+- GLUT
+- GLEW
+
+On Arch Linux, for example, you can install everything with:
+
+#+BEGIN_SRC sh
+sudo pacman -S cmake emacs gcc glew freeglut qtcreator
+#+END_SRC
+
+Feel free to send me a pull request with the correct package names for Ubuntu (or your favorite distro).
+
+* Building the files
+I'm not sure yet how I will organize files here.  However, if you want
+to compile anything, the standard way of using cmake is:
+
+#+BEGIN_SRC
+mkdir build # create a bulild directory
+cd build # cd into it
+cmake .. # invoke the cmake command, supplying as first argument the path to the CMakeLists.txt file that you want -- in this case, it is the parent dir
+make # compile your project
+#+END_SRC
+
+If you insist in not using cmake, the proper way of compiling is:
+
+#+BEGIN_SRC
+g++ hello.cpp -o hello -lGL -lglut
+#+END_SRC
+
+Then do a ~ls~ to see the executable name then just execute it. Believe
+me, this is better than manually managing your Makefile.
+
+If you want to submit your work here, please create a pull request OR
+talk to me. This is not intended (at first) to become a community
+project; however, I would be happy to do so. 
