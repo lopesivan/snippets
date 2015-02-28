@@ -1,3 +1,5 @@
+% Symbolic Math Example.
+
 clear all
 
 m = sym('m',[1 2]);

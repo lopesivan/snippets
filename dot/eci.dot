@@ -1,0 +1,82 @@
+#!/usr/bin/env dot -Tpng eci.dot -o eci.png
+digraph G {
+	
+	rankdir=LR
+	splines=curved
+	node [shape=record]
+
+	# Disciplines
+	MAC118 [label="<f0> MAC118 | <f1> Cálculo Diferencial e Integral 1"]
+	COS110 [label="<f0> COS110 | <f1> Algoritmos e Programação"]
+	COS111 [label="<f0> COS111 | <f1> Introdução À Engenharia De Computação E Informação"]
+	EEl280 [label="<f0> EEl280 | <f1> circuitos lógicos"]
+	FIS111 [label="<f0> FIS111 | <f1> Física Experimental 1"]
+	FIT112 [label="<f0> FIT112 | <f1> Física 1"]
+	EEL480 [label="<f0> EEL480 | <f1> Sistemas Digitais"]
+	EEL670 [label="<f0> EEL670 | <f1> Linguagens de Programação"]
+	FIS121 [label="<f0> FIS121 | <f1> Física Experimental 2"]
+	MAC128 [label="<f0> MAC128 | <f1> Cálculo Diferencial e Integral 2"]
+	MAE125 [label="<f0> MAE125 | <f1> Álgebra Linear 2"]
+	COS231 [label="<f0> COS231 | <f1> Estruturas de Dados"]
+	EEL580 [label="<f0> EEL580 | <f1> Arquitetura de Computatores"]
+	EEL881 [label="<f0> EEL881 | <f1> [label=Teoria da Computação]"]
+	FIM230 [label="<f0> FIM230 | <f1> Física 3"]
+	FIN231 [label="<f0> FIN231 | <f1> Física Experimental 3"]
+	MAC238 [label="<f0> MAC238 | <f1> Cálculo Diferencial e Integral 3"]
+	COE241 [label="<f0> COE241 | <f1> Estatística e Mod. Probabilist"]
+	COS242 [label="<f0> COS242 | <f1> Teorias dos Grafos"]
+	COS471 [label="<f0> COS471 | <f1> Computadores e Sociedade"]
+	FIM240 [label="<f0> FIM240 | <f1> Fisica IV"]
+	FIN241 [label="<f0> FIN241 | <f1> Fisica Experimental IV"]
+	IQG111 [label="<f0> IQG111 | <f1> Quimica EE"]
+	MAC248 [label="<f0> MAC248 | <f1> Calculo Diferen e Integral IV"]
+	COC473 [label="<f0> COC473 | <f1> Algebra Linear Computacional"]
+	COS351 [label="<f0> COS351 | <f1> Lógica Matemática"]
+	EEL770 [label="<f0> EEL770 | <f1> Sistemas Operacionais"]
+	EEL871 [label="<f0> EEL871 | <f1> Banco de Dados"]
+	EEL878 [label="<f0> EEL878 | <f1> Redes de Computadores I"]
+	IQG112 [label="<f0> IQG112 | <f1> Quimica Experimental EE"]
+	COC361 [label="<f0> COC361 | <f1> Inteligência Computacional"]
+	COE363 [label="<f0> COE363 | <f1> Telecomunicações	"]
+	COS360 [label="<f0> COS360 | <f1> Otimização"]
+	EEL873 [label="<f0> EEL873 | <f1> Engenharia de Software"]
+	EEL879 [label="<f0> EEL879 | <f1> Redes de Computadores II	"]
+	EEL882 [label="<f0> EEL882 | <f1> Computacao Grafica"]
+	COC472 [label="<f0> COC472 | <f1> Computação de Alto Desempenho"]
+	COP232 [label="<f0> COP232 | <f1> Gestão de Conhecimento I"]
+	COS470 [label="<f0> COS470 | <f1> Sistemas Distribuídos	4.0"]
+	EEL418 [label="<f0> EEL418 | <f1> Programação Avançada"]
+	COP364 [label="<f0> COP364 | <f1> Empreendedorismo I	"]
+	COS480 [label="<f0> COS480 | <f1> Construção de Bancos de Dados"]
+	COS482 [label="<f0> COS482 | <f1> Qualidade de Softwared"]
+	EEWX00 [label="<f0> EEWX00 | <f1> Projeto de Graduação"]
+	EEWU00 [label="<f0> EEWU00 | <f1> Estágio Obrigatório"]
+	
+	# Dependencies
+	EEL280 -> EEL480
+	FIS111 -> FIS121
+	FIT111 -> FIS121
+	MAC118 -> MAC128
+	COS110 -> COS231
+	MAE125 -> COS231
+	FIT112 -> FIM230
+	MAC128 -> FIM230
+	FIS121 -> FIN231
+	MAC128 -> MAC238
+	COS231 -> COS242
+	FIM230 -> FIM240
+	MAC238 -> FIM240
+	FIM231 -> FIN241
+	FIN231 -> FIN241
+	MAC128 -> MAC248
+	MAC238 -> COC473
+	MAE125 -> COC473
+	COS110 -> COS360
+	MAC238 -> COS360
+	MAE125 -> COS360
+	COS231 -> EEL418
+	EEL670 -> EEL418
+	EEL871 -> COS480
+	EEL873 -> COS482
+
+}
